@@ -1,7 +1,8 @@
 import requests
 import os
 import json
-from typing import Generator
+import time
+from typing import Generator, Dict
 
 search_url = "https://api.twitter.com/2/tweets/search/all"
 
@@ -19,12 +20,12 @@ def endpoint_call(params) -> dict:
 	"""
 	response = requests.request("GET", search_url, headers=headers, params=params)
 	print(response.status_code)
-		if response.status_code != 200:
-			raise Exception(response.status_code, response.text)
+	if response.status_code != 200:
+		raise Exception(response.status_code, response.text)
 	return response.json()
-	
+
 def format_params(start_time: str, end_time:str, latlongrad:str = None, lang_code:str='en',
-                  include_rts:bool = False, include_replies:bool = False, user=None) -> dict[str, str]:
+                  include_rts:bool = False, include_replies:bool = False, user=None) -> Dict[str, str]:
 	"""
 	Formats the provided parameters for calls to endpoint_call or fetch_tweets.
 	"""
@@ -39,10 +40,12 @@ def format_params(start_time: str, end_time:str, latlongrad:str = None, lang_cod
 	query_params = {'query': f'{user_query} {lang_query} {point_radius_query} {include_rts_query} {include_replies_query}',
 	                'start_time': start_time,
 	                'end_time': end_time}
-	
+
+	query_params['max_results']=500
+
 	return query_params
 
-def fetch_tweets(params:dict[str, str]) -> Generator[dict, None, None]:
+def fetch_tweets(params:Dict[str, str]) -> Generator[dict, None, None]:
 	"""
 	Returns a generator of tweet text-id pairs, each tweet in the form of a dictionary (retdict['text'], retdict['id'])
 	You can use format_params to filter this
@@ -52,13 +55,14 @@ def fetch_tweets(params:dict[str, str]) -> Generator[dict, None, None]:
 		response_json = endpoint_call(params)
 		
 		are_more_pages = 'meta' in response_json and 'next_token' in response_json['meta']
-		tweets_returned = [] if 'data' not in response_json else 
+		tweets_returned = [] if 'data' not in response_json else response_json['data']
 		
 		if are_more_pages:
 			params['next_token'] = response_json['meta']['next_token']
 			
 		for tweet_returned in tweets_returned:
 			yield tweet_returned
+		time.sleep(1)
 		
 if __name__ == "__main__":
 	params=format_params(user="DEM1995",

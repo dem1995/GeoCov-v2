@@ -8,7 +8,7 @@ import os
 import datetime
 import time
 import json
-from twitter_fetch import fetch_tweets
+from twitter_fetch import fetch_tweets, format_params
 from time_zone_retrieval import get_UTC_offset_from_latlong
 from geopy.geocoders import Nominatim
 geolocator = Nominatim(user_agent="GeoPy")
@@ -120,32 +120,29 @@ elif args.splitmode in {'daily', 'd'} or args.splitmode[1]=='d' and args.splitmo
 firstrun=True
 # Go through each of the time-frames and fetch/store the corresponding tweets
 for filename, since, until in zip(filenames, sinces, untils):
-	if firstrun:
-		firstrun=False
-	else:
-		time.sleep(5)
-
 	latlongrad = f"[{location.longitude} {location.latitude} {args.radius}mi]"
 	print("hi")
 	print(since)
 	print(until)
 	print(latlongrad)
-	retrieved_tweets=fetch_tweets(start_time=since, end_time=until, latlongrad=latlongrad,
+	params=format_params(start_time=since, end_time=until, latlongrad=latlongrad,
                      include_rts=False, include_replies=False, user=None)
-	print(json.dumps(retrieved_tweets, indent=4, sort_keys=True))
+	retrieved_tweets=fetch_tweets(params)
+	#print(json.dumps(retrieved_tweets, indent=4, sort_keys=True))
 
 	with open(f"{filename}.json", 'w+') as outfile:
-		if 'data' in retrieved_tweets:
-			for tweet_json in retrieved_tweets['data']:
+		with open(f"{filename}.ids", 'w+') as idfile:
+			for tweet_json in retrieved_tweets:
 				outfile.write(json.dumps(tweet_json) + '\n')
-	with open(f"{filename}.ids", 'w+') as idfile:
-		if 'data' in retrieved_tweets:
-			for tweet_json in retrieved_tweets['data']:
 				idfile.write(tweet_json['id'] + '\n')
-	with open(f"{filename}.ids", 'r') as idfile:
-		filelen = len(idfile.readlines())
-		meta_result_count = retrieved_tweets['meta']['result_count']
-		assert filelen == meta_result_count, f"There were {filelen} lines in the id file, but there should have been {meta_result_count} according to Twitter's API call return"
+	#with open(f"{filename}.ids", 'w+') as idfile:
+	#	if 'data' in retrieved_tweets:
+	#		for tweet_json in retrieved_tweets:
+	#			idfile.write(tweet_json['id'] + '\n')
+	#with open(f"{filename}.ids", 'r') as idfile:
+	#	filelen = len(idfile.readlines())
+	#	meta_result_count = retrieved_tweets['meta']['result_count']
+	#	assert filelen == meta_result_count, f"There were {filelen} lines in the id file, but there should have been {meta_result_count} according to Twitter's API call return"
 
 
 #	# Configuration
