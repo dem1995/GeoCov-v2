@@ -120,48 +120,14 @@ elif args.splitmode in {'daily', 'd'} or args.splitmode[1]=='d' and args.splitmo
 firstrun=True
 # Go through each of the time-frames and fetch/store the corresponding tweets
 for filename, since, until in zip(filenames, sinces, untils):
-	latlongrad = f"[{location.longitude} {location.latitude} {args.radius}mi]"
-	print("hi")
-	print(since)
-	print(until)
-	print(latlongrad)
-	params=format_params(start_time=since, end_time=until, latlongrad=latlongrad,
+	longlatrad = f"[{location.longitude} {location.latitude} {args.radius}mi]"
+	print(f"since: {since}, until: {until}, longlatrad: {longlatrad}")
+	params=format_params(start_time=since, end_time=until, longlatrad=longlatrad,
                      include_rts=False, include_replies=False, user=None)
 	retrieved_tweets=fetch_tweets(params)
-	#print(json.dumps(retrieved_tweets, indent=4, sort_keys=True))
-
-	with open(f"{filename}.json", 'w+') as outfile:
-		with open(f"{filename}.ids", 'w+') as idfile:
-			for tweet_json in retrieved_tweets:
-				outfile.write(json.dumps(tweet_json) + '\n')
-				idfile.write(tweet_json['id'] + '\n')
-	#with open(f"{filename}.ids", 'w+') as idfile:
-	#	if 'data' in retrieved_tweets:
-	#		for tweet_json in retrieved_tweets:
-	#			idfile.write(tweet_json['id'] + '\n')
-	#with open(f"{filename}.ids", 'r') as idfile:
-	#	filelen = len(idfile.readlines())
-	#	meta_result_count = retrieved_tweets['meta']['result_count']
-	#	assert filelen == meta_result_count, f"There were {filelen} lines in the id file, but there should have been {meta_result_count} according to Twitter's API call return"
-
-
-#	# Configuration
-#	c = twint.Config()
-#	#c.Username= "dril"
-#	c.Geo = f"{location.latitude},{location.longitude},{args.radius}mi"
-#	c.Since = since
-#	c.Until = until
-#	c.Store_json=True
-#	c.Output = f"{filename}.json"
-#	c.Lang = "en"
-#	# Run
-#	twint.run.Search(c)
-#	with open(c.Output, 'r', encoding='utf8') as tweet_lines:
-#		with open(f"{filename}.ids", 'w+') as idfile:
-#			if c.Store_json:
-#				for tweet_line in tweet_lines:
-#					tweet_json = json.loads(tweet_line)
-#					idfile.write(f"{tweet_json['id']}\n")
-#			else:
-#				for tweet_id in lines_to_ids(tweet_lines):
-#					idfile.write(f"{tweet_id}\n")
+	
+	# Write out results
+	with open(f"{filename}.json", 'w+') as outfile, open(f"{filename}.ids", 'w+') as idfile:
+		for tweet_json in retrieved_tweets:
+			outfile.write(json.dumps(tweet_json) + '\n')
+			idfile.write(tweet_json['id'] + '\n')
