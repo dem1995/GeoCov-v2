@@ -15,6 +15,6 @@ You're good to go! Now you can run `python gather_tweets.py -h` to learn what sp
 - Grabs Tweets from within 20 miles of Toronto's center for the entire year of 2021, splitting up the results by month.
 
 `python gather_tweets.py "St. Louis, MO" --since '2021-01' --until '2021-07-04' --splitmode=d --radius=40 > log.txt`
-- Grabs tweets from within 40 miles of St. Louis's center from the start of 2021 until the Fourth of July, splitting up the results by day.
+- Grabs tweets from within 40 miles of St. Louis's center from the start of 2021 until the Fourth of July (inclusive), splitting up the results by day.
 
 If your location is ambiguous, feel free to be more specific - Toronto, ON, Canada, for example. You can check `metainfo.txt` within an output folder to see exactly what location was used.
