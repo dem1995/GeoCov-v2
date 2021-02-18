@@ -24,14 +24,14 @@ def endpoint_call(params) -> dict:
 		raise Exception(response.status_code, response.text)
 	return response.json()
 
-def format_params(start_time: str, end_time:str, latlongrad:str = None, lang_code:str='en',
+def format_params(start_time: str, end_time:str, longlatrad:str = None, lang_code:str='en',
                   include_rts:bool = False, include_replies:bool = False, user=None) -> Dict[str, str]:
 	"""
 	Formats the provided parameters for calls to endpoint_call or fetch_tweets.
 	"""
 	include_rts_query = "" if include_rts else "-is:retweet"
 	include_replies_query = "" if include_replies else "-is:reply"
-	point_radius_query = "" if latlongrad is None else f"point_radius:{latlongrad}"
+	point_radius_query = "" if longlatrad is None else f"point_radius:{longlatrad}"
 	user_query = '' if user is None else f'from:{user}'
 	lang_query = '' if lang_code is None else f'lang:{lang_code}'
 
