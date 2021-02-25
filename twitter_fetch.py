@@ -12,17 +12,28 @@ with open("auth_keys.json") as auth_keys_file:
 bearer_token = auth_keys["BEARER_TOKEN"]
 headers = {"Authorization": f"Bearer {bearer_token}"}
 
+backoff_multiplier = 0
+
 def endpoint_call(params) -> dict:
 	"""
 	Makes a call to the previously-specified endpoint with the previously specified credentials
 	On the provided parameters. This is a very limited call; it returns a single page.
 	To retrieve many tweets, use fetch_tweets.
 	"""
-	response = requests.request("GET", search_url, headers=headers, params=params)
-	print(response.status_code)
-	if response.status_code != 200:
-		raise Exception(response.status_code, response.text)
-	return response.json()
+	global backoff_multiplier
+	while backoff_multiplier == 0 or response.status_code == 429:
+		time.sleep(int(1.5**backoff_multiplier))
+		print("backoff_multiplier", backoff_multiplier)
+		response = requests.request("GET", search_url, headers=headers, params=params)
+		print(response.status_code)
+		if response.status_code == 429:
+			backoff_multiplier += 1
+		if response.status_code == 503:
+			time.sleep(3600)
+		if response.status_code != 429 and response.status_code != 200 and response.status_code!=503 or backoff_multiplier > 21:
+			raise Exception(response.status_code, response.text)
+		if response.status_code == 200:
+			return response.json()
 
 def format_params(start_time: str, end_time:str, longlatrad:str = None, lang_code:str='en',
                   include_rts:bool = False, include_replies:bool = False, user=None) -> Dict[str, str]:
@@ -53,20 +64,20 @@ def fetch_tweets(params:Dict[str, str]) -> Generator[dict, None, None]:
 	are_more_pages = True
 	while are_more_pages:
 		response_json = endpoint_call(params)
-		
+
 		are_more_pages = 'meta' in response_json and 'next_token' in response_json['meta']
 		tweets_returned = [] if 'data' not in response_json else response_json['data']
-		
+
 		if are_more_pages:
 			params['next_token'] = response_json['meta']['next_token']
-			
+
 		for tweet_returned in tweets_returned:
 			yield tweet_returned
 		time.sleep(1)
-		
+
 if __name__ == "__main__":
 	params=format_params(user="DEM1995",
 	                     start_time="2019-12-01T00:00:00-06:00",
 	                     end_time="2019-12-04T00:00:00-06:00")
-
-	print(json.dumps(retrieved_tweets, indent=4, sort_keys=True))
+	retrieved_tweets = fetch_tweets(params)
+	print(json.dumps(list(retrieved_tweets), indent=4, sort_keys=True))

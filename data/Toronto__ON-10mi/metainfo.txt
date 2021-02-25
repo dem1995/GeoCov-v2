@@ -1,0 +1,15 @@
+----------Run at 2021-02-19 16:03:25.714381----------
+Tweets from Toronto, Golden Horseshoe, Ontario, Canada (10 mi radius of 43.6534817, -79.3839347) ([Toronto, ON]/[Toronto__ON])
+Tweets dated 2020-01 through 2021-01, chunked m
+----------Run at 2021-02-19 16:19:34.914506----------
+Tweets from Toronto, Golden Horseshoe, Ontario, Canada (10 mi radius of 43.6534817, -79.3839347) ([Toronto, ON]/[Toronto__ON])
+Tweets dated 2020-02 through 2021-01, chunked m
+----------Run at 2021-02-19 16:59:46.696270----------
+Tweets from Toronto, Golden Horseshoe, Ontario, Canada (10 mi radius of 43.6534817, -79.3839347) ([Toronto, ON]/[Toronto__ON])
+Tweets dated 2020-03 through 2021-01, chunked m
+----------Run at 2021-02-19 19:20:53.082962----------
+Tweets from Toronto, Golden Horseshoe, Ontario, Canada (10 mi radius of 43.6534817, -79.3839347) ([Toronto, ON]/[Toronto__ON])
+Tweets dated 2020-04 through 2021-01, chunked m
+----------Run at 2021-02-20 12:20:27.767637----------
+Tweets from Toronto, Golden Horseshoe, Ontario, Canada (10 mi radius of 43.6534817, -79.3839347) ([Toronto, ON]/[Toronto__ON])
+Tweets dated 2020-09 through 2021-01, chunked m
