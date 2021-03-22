@@ -36,11 +36,14 @@ def endpoint_call(params) -> dict:
 			return response.json()
 
 def format_params(start_time: str, end_time:str, longlatrad:str = None, lang_code:str='en',
-                  include_rts:bool = False, include_replies:bool = False, user=None) -> Dict[str, str]:
+                  include_rts:bool = False, include_qts:bool = False,
+                  include_replies:bool = False, include_ads:bool = False, user=None) -> Dict[str, str]:
 	"""
 	Formats the provided parameters for calls to endpoint_call or fetch_tweets.
 	"""
 	include_rts_query = "" if include_rts else "-is:retweet"
+	include_qts_query = "" if include_qts else "-is:quote"
+	include_ads_query = "" if include_ads else "-is:nullcast"
 	include_replies_query = "" if include_replies else "-is:reply"
 	point_radius_query = "" if longlatrad is None else f"point_radius:{longlatrad}"
 	user_query = '' if user is None else f'from:{user}'
@@ -48,7 +51,8 @@ def format_params(start_time: str, end_time:str, longlatrad:str = None, lang_cod
 
 	# Optional params: start_time,end_time,since_id,until_id,max_results,next_token,
 	# expansions,tweet.fields,media.fields,poll.fields,place.fields,user.fields
-	query_params = {'query': f'{user_query} {lang_query} {point_radius_query} {include_rts_query} {include_replies_query}',
+	query_params = {'query': f'{user_query} {lang_query} {point_radius_query} {include_rts_query} {include_qts_query} {include_ads_query} {include_replies_query}',
+	                'tweet.fields': 'id,author_id,geo,created_at,text,lang',
 	                'start_time': start_time,
 	                'end_time': end_time}
 
