@@ -1,4 +1,6 @@
 """
+Organizes Twitter API calls for geocoded, temporally-organized data.
+Call with the flag -h for usage help.
 """
 
 import calendar
