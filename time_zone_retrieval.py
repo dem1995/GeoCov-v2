@@ -25,7 +25,7 @@ def get_UTC_offset_from_latlong(lat, lng):
 
 	# Tack on + or - as needed for UTC format
 	formatted_offset = time.strftime("%H:%M",ty_res)
-	formatted_offset_prefix = '+' if offset<0 else '-'
+	formatted_offset_prefix = '-' if offset<0 else '+'
 	formatted_offset = formatted_offset_prefix + formatted_offset
 	return formatted_offset
 
