@@ -129,9 +129,9 @@ for filename, since, until in zip(filenames, sinces, untils):
 	retrieved_tweets=fetch_tweets(params)
 
 	# Write out results
-	with open(f"{filename}.json", 'w+') as outfile, open(f"{filename}.ids", 'w+') as idfile:
+	with open(f"{filename}.jsonl", 'w+') as outfile, open(f"{filename}.ids", 'w+') as idfile:
 		for tweet_json in retrieved_tweets:
 			outfile.write(json.dumps(tweet_json) + '\n')
 			idfile.write(tweet_json['id'] + '\n')
 
-	time.sleep(600)
+	time.sleep(60)
