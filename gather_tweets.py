@@ -27,7 +27,6 @@ parser.add_argument('--splitmode', default='monthly',
 		", or nd, which is n-daily where n is an integer - i.e., splitmode=7d would be weekly from the start day")
 parser.add_argument('--radius', nargs='?', type=int, default=40,
 		help="The radius (in miles) about the location to grab Tweets for. Defaults to 40 miles.")
-parser.add_argument('--place', nargs='?', type=bool, default=
 args = parser.parse_args()
 
 location = geolocator.geocode(args.location)
